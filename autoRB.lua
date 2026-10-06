@@ -249,8 +249,7 @@ local function CheckPet(Container)
 
     for _, v in ipairs(Container:GetChildren()) do
         if string.find(v.Name, "Dragon", 1, true)
-        or string.find(v.Name, "Griffin", 1, true)
-        or string.find(v.Name, "Kitsune", 1, true) then
+        or string.find(v.Name, "Griffin", 1, true) then
 
             if v:GetAttribute("SpawnMutation") == "Rainbow" then
                 FoundRainbow = true
