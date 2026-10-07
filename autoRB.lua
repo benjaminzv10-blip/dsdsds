@@ -2,8 +2,7 @@ local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
-local VirtualUser = game:GetService("VirtualUser")
-local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
@@ -12,16 +11,17 @@ end
 local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
 task.wait(15)
+local Players = game:GetService("Players")
+local VirtualUser = game:GetService("VirtualUser")
 
--- Anti AFK
-player.Idled:Connect(function()
+local Player = Players.LocalPlayer
+
+Player.Idled:Connect(function()
     VirtualUser:CaptureController()
     VirtualUser:ClickButton2(Vector2.new())
 end)
-
 task.wait(15)
 
--- GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "RollbackRideAPetGui"
 ScreenGui.ResetOnSpawn = false
@@ -100,20 +100,15 @@ local RejoinCorner = Instance.new("UICorner")
 RejoinCorner.CornerRadius = UDim.new(0, 8)
 RejoinCorner.Parent = RejoinButton
 
--- Drag GUI
 local dragging = false
-local dragInput
-local mousePos
-local framePos
+local dragInput, mousePos, framePos
 
 TitleBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1
-    or input.UserInputType == Enum.UserInputType.Touch then
-
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
         mousePos = input.Position
         framePos = MainFrame.Position
-
+        
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
@@ -123,9 +118,7 @@ TitleBar.InputBegan:Connect(function(input)
 end)
 
 TitleBar.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement
-    or input.UserInputType == Enum.UserInputType.Touch then
-
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         dragInput = input
     end
 end)
@@ -133,23 +126,17 @@ end)
 UserInputService.InputChanged:Connect(function(input)
     if input == dragInput and dragging then
         local delta = input.Position - mousePos
-
         MainFrame.Position = UDim2.new(
-            framePos.X.Scale,
-            framePos.X.Offset + delta.X,
-            framePos.Y.Scale,
+            framePos.X.Scale, 
+            framePos.X.Offset + delta.X, 
+            framePos.Y.Scale, 
             framePos.Y.Offset + delta.Y
         )
     end
 end)
 
--- Rollback
 local rollbackActive = false
-
-local remotesFolder = ReplicatedStorage
-    :WaitForChild("Remotes")
-    :WaitForChild("Game")
-
+local remotesFolder = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Game")
 local eventRemote = remotesFolder:WaitForChild("SaveSatchelOrder")
 local hatchRemote = remotesFolder:WaitForChild("Hatch")
 
@@ -162,7 +149,6 @@ local function startRollback()
                     Backpack = { "\255" }
                 })
             end)
-
             task.wait(0.1)
         end
     end)
@@ -170,7 +156,6 @@ end
 
 local function setRollbackState(state)
     rollbackActive = state
-
     if rollbackActive then
         ToggleButton.Text = "Rollback: ON"
         ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 200, 80)
@@ -186,115 +171,73 @@ ToggleButton.MouseButton1Click:Connect(function()
 end)
 
 RejoinButton.MouseButton1Click:Connect(function()
-    TeleportService:Teleport(game.PlaceId)
+    TeleportService:Teleport(game.PlaceId, player)
 end)
 
--- เปิด Rollback
 setRollbackState(true)
-
 task.wait(2)
 
--- Hatch ไข่ทั้ง 2 ใบ
+-- ยิง Remote Hatch ไข่ทั้ง 2 ใบ
 pcall(function()
     hatchRemote:FireServer({
-        ["EggKey"] = "6702758a-e2ec-4960-8a10-fe1f85f90b08"
+        ["EggKey"] = "75d54992-ae0d-4ea0-b3a1-510987fcddc5"
     })
-
-    hatchRemote:FireServer({
-        ["EggKey"] = "1a1f0658-baad-451f-bdc5-c090778b173a"
-    })
+    
 end)
 
 task.wait(8)
 
--- Discord Webhook
-local WEBHOOK_URL = "ใส่_WEBHOOK_URL_ของคุณตรงนี้"
+local HttpService = game:GetService("HttpService")
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1531167060275761243/jPwoiJhKV5Y66crkdNAdFl46bZ3atDcpiSKfXGOiDmHwgk_lgRb22SaFVJZXJ2TGHnG7"
 
 local function sendDiscordWebhook(msg)
-    local request =
-        (syn and syn.request)
-        or (http and http.request)
-        or http_request
-        or (fluxus and fluxus.request)
-        or request
-
-    if not request then
-        return
-    end
-
-    local payload = HttpService:JSONEncode({
-        content = "@everyone " .. msg,
-        username = "Pet Checker"
-    })
-
-    pcall(function()
-        request({
-            Url = WEBHOOK_URL,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = payload
+    local request = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+    if request then
+        local payload = HttpService:JSONEncode({
+            content = "@everyone " .. msg,
+            username = "Pet Checker"
         })
-    end)
+        pcall(function()
+            request({
+                Url = WEBHOOK_URL,
+                Method = "POST",
+                Headers = {
+                    ["Content-Type"] = "application/json"
+                },
+                Body = payload
+            })
+        end)
+    end
 end
 
--- ตรวจ Pet
 local FoundRainbow = false
 
 local function CheckPet(Container)
-    if not Container then
-        return
-    end
+    if not Container then return end
 
     for _, v in ipairs(Container:GetChildren()) do
         if string.find(v.Name, "Dragon", 1, true)
-        or string.find(v.Name, "Griffin", 1, true) then
+        or string.find(v.Name, "Griffin", 1, true)
+        or string.find(v.Name, "Kitsune", 1, true) then
 
             if v:GetAttribute("SpawnMutation") == "Rainbow" then
                 FoundRainbow = true
-                return
             end
         end
     end
 end
 
 local backpack = player:WaitForChild("Backpack")
+CheckPet(backpack)
 
--- รอให้ Pet โหลดเข้า Backpack/Character
-local CheckTimeout = 15
-local StartTime = tick()
-
-while not FoundRainbow and (tick() - StartTime) < CheckTimeout do
-
-    -- ตรวจ Backpack
-    CheckPet(backpack)
-
-    -- ตรวจ Character
-    if player.Character then
-        CheckPet(player.Character)
-    end
-
-    if FoundRainbow then
-        break
-    end
-
-    task.wait(0.5)
+if player.Character then
+    CheckPet(player.Character)
 end
 
--- ผลลัพธ์
 if FoundRainbow then
-
     print("Rainbow = true")
-
-    sendDiscordWebhook(
-        "🎉 **พบ Dragon / Griffin / Kitsune สภาพ Rainbow แล้ว!** (Player: "
-        .. player.Name .. ")"
-    )
-
+    sendDiscordWebhook("🎉 **พบ Dragon หรือ Griffin สภาพ Rainbow แล้ว!** (Player: " .. player.Name .. ")")
 else
-
     print("Rainbow = false")
-
-    TeleportService:Teleport(game.PlaceId)
+    TeleportService:Teleport(game.PlaceId, player)
 end
