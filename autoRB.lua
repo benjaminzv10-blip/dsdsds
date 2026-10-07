@@ -183,6 +183,17 @@ pcall(function()
         ["EggKey"] = "75d54992-ae0d-4ea0-b3a1-510987fcddc5"
     })
     
+    hatchRemote:FireServer({
+        ["EggKey"] = "670d1ca3-e07d-4859-9869-acb561f53edb"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "2ff0a560-6428-4e1e-b67f-e1b8de303224"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "42cdd539-933f-4807-a6c2-8ecd9adb4953"
+    })
 end)
 
 task.wait(8)
