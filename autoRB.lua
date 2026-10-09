@@ -180,11 +180,11 @@ task.wait(2)
 -- ยิง Remote Hatch ไข่ทั้ง 2 ใบ
 pcall(function()
     hatchRemote:FireServer({
-        ["EggKey"] = "980c29bc-3641-45a1-82e0-e1eb2248d274"
+        ["EggKey"] = "6d3b78fa-fb95-40c3-a534-66efc45268b0"
     })
     
     hatchRemote:FireServer({
-        ["EggKey"] = "1a1f0658-baad-451f-bdc5-c090778b173a"
+        ["EggKey"] = "052bfb16-c9e6-4180-ab34-80748b98064d"
     })
 
     hatchRemote:FireServer({
