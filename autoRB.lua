@@ -180,17 +180,9 @@ task.wait(2)
 -- ยิง Remote Hatch ไข่ทั้ง 2 ใบ
 pcall(function()
     hatchRemote:FireServer({
-        ["EggKey"] = "6d3b78fa-fb95-40c3-a534-66efc45268b0"
+        ["EggKey"] = "5875d428-bdf4-4f7f-b44e-eb142c66b936"
     })
     
-    hatchRemote:FireServer({
-        ["EggKey"] = "052bfb16-c9e6-4180-ab34-80748b98064d"
-    })
-
-    hatchRemote:FireServer({
-        ["EggKey"] = "126c410a-fedb-42cf-8328-78d71fe4d086"
-    })
-
 end)
 
 task.wait(8)
@@ -224,11 +216,16 @@ local function CheckPet(Container)
     if not Container then return end
 
     for _, v in ipairs(Container:GetChildren()) do
-        if string.find(v.Name, "Dragon", 1, true)
+        if string.find(v.Name, "Kitsune", 1, true)
         or string.find(v.Name, "Griffin", 1, true)
-        or string.find(v.Name, "Snail", 1, true) then
+        or string.find(v.Name, "Wukong", 1, true)
+        or string.find(v.Name, "Manticore", 1, true)
+        or string.find(v.Name, "Sabertooth  ", 1, true)
+        or string.find(v.Name, "Skeletal Dragon", 1, true)
+        or string.find(v.Name, "Volkaris", 1, true) then
 
-            if v:GetAttribute("SpawnMutation") == "Rainbow" then
+            if v:GetAttribute("SpawnMutation") == "Rainbow"
+            or v:GetAttribute("SpawnMutation") == "Hunted" then
                 FoundRainbow = true
             end
         end
