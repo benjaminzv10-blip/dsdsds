@@ -180,9 +180,45 @@ task.wait(2)
 -- ยิง Remote Hatch ไข่ทั้ง 2 ใบ
 pcall(function()
     hatchRemote:FireServer({
-        ["EggKey"] = "5875d428-bdf4-4f7f-b44e-eb142c66b936"
+        ["EggKey"] = "3ff61ef5-3f7d-4f54-a026-d66fa6598474"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "ecf8018a-1678-4868-acaa-7d7058788f40"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "bf1bd5b1-882e-4368-9b15-f36a385249ec"
     })
     
+    hatchRemote:FireServer({
+        ["EggKey"] = "d692804c-1cca-4c47-9649-7f9992a8d1af"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "ecd06cb8-9432-4695-a68f-eec9b95f9304"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "efa1a682-4124-4e0b-afa4-79d876cdb504"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "cfafe4b5-b6cd-4a7b-bd20-e45b9901f2f0"
+    })
+    
+    hatchRemote:FireServer({
+        ["EggKey"] = "a7cd5bf6-1db3-4e3c-8ac8-1ab0d0ec0172"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "e138e277-f650-4f97-b634-0af810088098"
+    })
+
+    hatchRemote:FireServer({
+        ["EggKey"] = "7b9c280a-a4b6-407c-96e1-752d43486a51"
+    })
+
 end)
 
 task.wait(8)
@@ -216,18 +252,11 @@ local function CheckPet(Container)
     if not Container then return end
 
     for _, v in ipairs(Container:GetChildren()) do
-        if string.find(v.Name, "Kitsune", 1, true)
-        or string.find(v.Name, "Griffin", 1, true)
-        or string.find(v.Name, "Wukong", 1, true)
-        or string.find(v.Name, "Manticore", 1, true)
-        or string.find(v.Name, "Sabertooth  ", 1, true)
-        or string.find(v.Name, "Skeletal Dragon", 1, true)
-        or string.find(v.Name, "Volkaris", 1, true) then
+        local petName = v:GetAttribute("PetName")
 
-            if v:GetAttribute("SpawnMutation") == "Rainbow"
-            or v:GetAttribute("SpawnMutation") == "Hunted" then
-                FoundRainbow = true
-            end
+        if petName == "Snail"
+        or petName == "Volkaris" then
+            FoundRainbow = true
         end
     end
 end
